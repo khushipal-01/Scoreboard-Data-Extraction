@@ -206,11 +206,9 @@ Only likely scoreboard frames are passed to OCR.
 
 ### Visual Evidence
 
-```text
-docs/screenshots/02_code_running.png
-```
+## 🎥 Input Video
 
----
+[▶️ Watch Input Bowling Scoreboard Video](input/bowling_scoreboard.mp4)
 
 ## 3. Scoreboard Detection
 
@@ -218,17 +216,7 @@ Since the provided scoreboard has a **fixed layout**, calibrated ROI coordinates
 
 This avoids unnecessary object-detection models and provides fast, deterministic extraction.
 
-### Visual Evidence
 
-```text
-docs/screenshots/03_scoreboard_detection.png
-```
-
-```markdown
-![Scoreboard Detection](docs/screenshots/03_scoreboard_detection.png)
-```
-
----
 
 ## 4. Image Preprocessing
 
@@ -266,17 +254,7 @@ Row + Column
 Scoreboard Cell
 ```
 
-### Visual Evidence
 
-```text
-docs/screenshots/04_ocr_output.png
-```
-
-```markdown
-![OCR Output](docs/screenshots/04_ocr_output.png)
-```
-
----
 
 ## 6. OCR Cleaning & Validation
 
@@ -405,25 +383,8 @@ OCR Extraction
 Final JSON / CSV
     ↓
 Annotated Video
-```
 
----
 
-# 📸 Documentation Evidence
-
-The assessment requires screenshots showing the working solution.
-
-| Screenshot                    | What it should show         |
-| ----------------------------- | --------------------------- |
-| `01_input_frame.png`          | Original scoreboard frame   |
-| `02_code_running.png`         | Project running in terminal |
-| `03_scoreboard_detection.png` | ROI + grid detection        |
-| `04_ocr_output.png`           | OCR boxes + detected text   |
-| `05_final_output.png`         | JSON/CSV final result       |
-
-These screenshots can be included in the assessment PDF.
-
----
 
 # ❓ Key Technical Decisions
 
