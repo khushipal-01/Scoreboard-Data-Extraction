@@ -363,12 +363,9 @@ The final video visually demonstrates:
 
 ### Demo Video
 
-**Add your demo video link here:**
+## 🎥 Input Video
 
-```text
-[Demo Video](YOUR_GOOGLE_DRIVE_OR_YOUTUBE_LINK)
-```
-
+[▶️ Watch Input Bowling Scoreboard Video](input/bowling_scoreboard.mp4)
 ### Recommended Demo Flow
 
 ```text
