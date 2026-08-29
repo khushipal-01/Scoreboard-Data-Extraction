@@ -1,0 +1,34 @@
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.env
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# IDE & OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Scratch analysis frames
+analysis_frames/
+debug_cells/
+
+# Raw input video (link provided in README to download)
+input/*.mp4
+!input/.gitkeep

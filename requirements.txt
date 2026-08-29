@@ -1,0 +1,9 @@
+# Core CV & Image Processing
+opencv-python>=4.8.0
+numpy>=1.24.0
+
+# OCR Engine
+easyocr>=1.7.0
+
+# Image handling
+Pillow>=10.0.0
