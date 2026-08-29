@@ -70,19 +70,7 @@ The provided bowling scoreboard video is used as the input.
 | Frames     |            ~1735 |
 | Layout     | Fixed scoreboard |
 
-### Input Screenshot
 
-**Add screenshot:**
-
-```text
-docs/screenshots/01_input_frame.png
-```
-
-```markdown
-![Input Video](docs/screenshots/01_input_frame.png)
-```
-
----
 
 # 🛠️ Technology Stack
 
