@@ -54,18 +54,9 @@ JSON       CSV     Annotated Video
 ```
 
 ### 📌 Architecture Flowchart
+## 📐 System Architecture
 
-**Add the generated architecture image here:**
-
-```text
-docs/architecture/flowchart.png
-```
-
-```markdown
-![Pipeline Architecture](docs/architecture/flowchart.png)
-```
-
----
+![Bowling Scoreboard Extraction Pipeline](https://github.com/khushipal-01/Scoreboard-Data-Extraction/blob/main/docs/architecture/flowchart.png?raw=true)
 
 # 🎥 Input Video
 
