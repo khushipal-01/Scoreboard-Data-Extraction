@@ -55,9 +55,9 @@ JSON       CSV     Annotated Video
 
 ### 📌 Architecture Flowchart
 ## 📐 System Architecture
+# 📐 System Architecture
 
-![Bowling Scoreboard Extraction Pipeline](https://github.com/khushipal-01/Scoreboard-Data-Extraction/blob/main/docs/architecture/flowchart.png?raw=true)
-
+![Bowling Scoreboard Extraction Pipeline](docs/architecture/flowchart.png)
 # 🎥 Input Video
 
 The provided bowling scoreboard video is used as the input.
