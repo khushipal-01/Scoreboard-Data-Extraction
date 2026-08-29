@@ -351,6 +351,7 @@ total_score
 ---
 
 # 🎥 Annotated Video
+[▶️ Watch Annotated Video](output/annotated_video.mp4)
 
 The final video visually demonstrates:
 
@@ -361,7 +362,8 @@ The final video visually demonstrates:
 * OCR confidence
 * Extracted scoreboard information
 
-### Demo Video
+### 🖼️ Annotated Output Frame
+![Frame 000090](output/frames/annotated_frame_000090.png)
 
 ## 🎥 Input Video
 
@@ -426,35 +428,6 @@ Moving cameras and highly angled views would require automatic perspective corre
 
 ---
 
-# 📦 Deliverables
-
-This project provides all three required assessment deliverables:
-
-### 1. GitHub Repository
-
-Contains complete source code and documentation.
-
-### 2. Demo Video
-
-Shows:
-
-```text
-Input → Code → Detection → OCR → Final Output
-```
-
-### 3. Documentation PDF
-
-Contains screenshots of:
-
-```text
-Input
-Code Execution
-Scoreboard Detection
-OCR
-Final Output
-```
-
----
 
 # 👩‍💻 Candidate
 
