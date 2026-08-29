@@ -1,94 +1,144 @@
-# Scoreboard Data Extraction from Bowling Video
+# 🎳 Bowling Scoreboard Data Extraction
 
-A modular, robust Computer Vision pipeline designed for **FOG Technologies Private Limited** to automatically detect, extract, parse, and structure scoreboard information from bowling scoring monitor video footage.
+### Computer Vision Engineer – Round 1 | FOG Technologies
 
----
+A Computer Vision + OCR pipeline that extracts structured bowling scoreboard data from video.
 
-## 1. Problem Statement
-
-Bowling alleys utilize automated scoring consoles (such as Brunswick Scoring Systems) displaying multi-player frames, ball-by-ball marks, cumulative totals, active player indicators, and animated overlays. Manually recording these score updates from video streams is tedious and error-prone. This project automates the extraction and temporal tracking of scoreboard data directly from video frames into structured JSON/CSV records and annotated video.
+The system detects scoreboard frames, extracts player/frame information, validates OCR results, tracks score changes, and generates structured **JSON/CSV data** with an **annotated output video**.
 
 ---
 
-## 2. Objectives & Deliverables
+## 🎯 Problem
 
-1. **Source Code & Architecture**: Clean, production-grade modular Python package.
-2. **Annotated Output Video**: Visual output overlaying detected scoreboard regions, bounding boxes, OCR confidence scores, and real-time player HUD summaries.
-3. **Structured Data**: Structured `extracted_data.json` and `extracted_data.csv` tracking score state transitions over time.
-4. **Documentation**: Clear execution guide, technical rationale, and interview preparation.
+Bowling scoring screens continuously display:
 
----
+* Players and initials
+* Frames
+* Strike (`X`)
+* Spare (`/`)
+* Miss (`-`)
+* Frame scores
+* Total scores
+* Lane/group information
 
-## 3. Input Video Analysis
+The video also contains animations and non-scoreboard frames.
 
-| Property | Value | Rationale / Architectural Impact |
-|---|---|---|
-| **Resolution** | 1920 × 1080 (Full HD) | Crisp character resolution; no heavy super-resolution needed. |
-| **Frame Rate** | 30.0 FPS | Scoreboards update slowly; temporal sampling (e.g. 1–3s) reduces compute by 90%+. |
-| **Duration** | 57.83 s (1735 frames) | Full 4-player game segment with multiple group switches. |
-| **Layout Nature** | Fixed Screen Layout | Directly fed display feed. Heavy deep-learning object detectors (YOLO) are unnecessary; spatial ROI grid mapping is O(1) and deterministic. |
-| **Content Switching** | Scoreboard + Pin Graphics + Animations | Requires heuristic frame classification to filter non-scoreboard frames. |
-| **Text Characteristics** | High-contrast styled 3D numerals on blue/yellow background | Spatial bounding-box mapping with EasyOCR & Tesseract fallback. |
+The goal is to automatically identify valid scoreboard frames and convert the displayed information into structured data.
 
 ---
 
-## 4. Computer Vision Pipeline Architecture
+# 🔄 Solution Pipeline
 
-```mermaid
-flowchart TD
-    A[Input Video: bowling_scoreboard.mp4] --> B[Video Processor & Frame Sampler]
-    B --> C{Frame Classifier}
-    C -- "Animation / Logo / Pins" --> D[Skip Frame]
-    C -- "Scoreboard Frame" --> E[Table & Header ROI Extraction]
-    E --> F[Single-Pass OCR with Bounding Boxes]
-    F --> G[Spatial Coordinate Grid Mapping]
-    G --> H[Domain-Specific Bowling Data Cleaner]
-    H --> I{Temporal Deduplication}
-    I -- "Unchanged" --> J[Buffer Frame]
-    I -- "State Changed" --> K[Record State & Save Annotated Frame]
-    K --> L[Export JSON + CSV + Annotated Video]
+```text
+Input Video
+     ↓
+Frame Sampling
+     ↓
+Frame Classification
+     ↓
+Scoreboard ROI
+     ↓
+Image Preprocessing
+     ↓
+OCR
+     ↓
+Spatial Grid Mapping
+     ↓
+OCR Cleaning & Validation
+     ↓
+Temporal State Tracking
+     ↓
+ ┌──────────┬──────────┬──────────────┐
+ ↓          ↓          ↓
+JSON       CSV     Annotated Video
+```
+
+### 📌 Architecture Flowchart
+
+**Add the generated architecture image here:**
+
+```text
+docs/architecture/flowchart.png
+```
+
+```markdown
+![Pipeline Architecture](docs/architecture/flowchart.png)
 ```
 
 ---
 
-## 5. Technology Stack
+# 🎥 Input Video
 
-- **Python 3.10+ / 3.13**
-- **OpenCV (`opencv-python`)**: Video I/O, frame slicing, morphological operations, BGR/HSV color thresholding, visual annotation.
-- **NumPy**: Matrix slicing, spatial coordinate calculations, vector operations.
-- **EasyOCR / PyTesseract**: OCR text recognition and bounding box extraction.
-- **Pillow**: Image formatting utilities.
+The provided bowling scoreboard video is used as the input.
+
+| Property   |            Value |
+| ---------- | ---------------: |
+| Resolution |      1920 × 1080 |
+| FPS        |               30 |
+| Duration   |       ~57.83 sec |
+| Frames     |            ~1735 |
+| Layout     | Fixed scoreboard |
+
+### Input Screenshot
+
+**Add screenshot:**
+
+```text
+docs/screenshots/01_input_frame.png
+```
+
+```markdown
+![Input Video](docs/screenshots/01_input_frame.png)
+```
 
 ---
 
-## 6. Project Structure
+# 🛠️ Technology Stack
 
-```
-Scoreboard Data Extraction/
+* **Python** – Core implementation
+* **OpenCV** – Video processing and Computer Vision
+* **NumPy** – Image/matrix operations
+* **EasyOCR** – Text detection and recognition
+* **PyTesseract** – OCR fallback
+* **Pillow** – Image utilities
+* **JSON / CSV** – Structured output
+
+---
+
+# 📂 Project Structure
+
+```text
+bowling-scoreboard-extractor/
 │
 ├── input/
-│   └── bowling_scoreboard.mp4       # Source input video
+│   └── bowling_scoreboard.mp4
 │
 ├── output/
-│   ├── annotated_video.mp4          # Final annotated video with bounding boxes & HUD
-│   ├── extracted_data.json          # Hierarchical JSON timeline of game states
-│   ├── extracted_data.csv           # Tabular CSV with all player frame scores
-│   └── frames/                      # High-res annotated snapshot per state transition
-│       ├── annotated_frame_000000.png
-│       ├── annotated_frame_000900.png
-│       └── annotated_frame_001620.png
+│   ├── annotated_video.mp4
+│   ├── extracted_data.json
+│   ├── extracted_data.csv
+│   └── frames/
+│
+├── docs/
+│   ├── architecture/
+│   │   └── flowchart.png
+│   └── screenshots/
+│       ├── 01_input_frame.png
+│       ├── 02_code_running.png
+│       ├── 03_scoreboard_detection.png
+│       ├── 04_ocr_output.png
+│       └── 05_final_output.png
 │
 ├── src/
-│   ├── __init__.py
-│   ├── config.py                    # Central configuration & calibrated ROI coordinates
-│   ├── video_processor.py           # Video I/O, properties, and frame sampling
-│   ├── frame_classifier.py          # Color & edge density classifier (Scoreboard vs Animation)
-│   ├── scoreboard_detector.py       # Table ROI extraction & cell grid mapping
-│   ├── image_preprocessor.py        # Image padding, resizing, and normalization
-│   ├── ocr_processor.py             # Spatial OCR & bounding-box detection
-│   ├── data_processor.py            # Bowling notation cleaning & domain validation rules
-│   ├── output_generator.py          # JSON/CSV exporters, HUD renderer, video writer
-│   └── main.py                      # CLI orchestration entry point
+│   ├── config.py
+│   ├── video_processor.py
+│   ├── frame_classifier.py
+│   ├── scoreboard_detector.py
+│   ├── image_preprocessor.py
+│   ├── ocr_processor.py
+│   ├── data_processor.py
+│   ├── output_generator.py
+│   └── main.py
 │
 ├── requirements.txt
 └── README.md
@@ -96,114 +146,393 @@ Scoreboard Data Extraction/
 
 ---
 
-## 7. Setup and Installation
+# ⚙️ Installation
 
-### Step 1: Clone the repository
+### 1. Clone Repository
+
 ```bash
 git clone https://github.com/<your-username>/bowling-scoreboard-extractor.git
 cd bowling-scoreboard-extractor
 ```
 
-### Step 2: Set up a virtual environment (Recommended)
+### 2. Create Virtual Environment
+
+**Windows:**
+
 ```bash
 python -m venv venv
-# On Windows:
 .\venv\Scripts\activate
-# On Linux/macOS:
+```
+
+**Linux/macOS:**
+
+```bash
+python3 -m venv venv
 source venv/bin/activate
 ```
 
-### Step 3: Install dependencies
+### 3. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ---
 
-## 8. How to Run
+# ▶️ Run
 
-### Basic Execution (Default settings):
+### Default
+
 ```bash
 python -m src.main
 ```
 
-### Custom Sample Interval (e.g. process every 60 frames = 2 seconds):
+### Custom Sampling
+
 ```bash
 python -m src.main --sample-interval 60
 ```
 
-### Custom Input and Output Paths:
+At 30 FPS, 60 frames ≈ 2 seconds.
+
+### Custom Input/Output
+
 ```bash
-python -m src.main --input path/to/video.mp4 --output-dir my_output/
+python -m src.main \
+    --input path/to/video.mp4 \
+    --output-dir output/
 ```
 
 ---
 
-## 9. Output Formats
+# 🧠 How It Works
 
-### JSON Output (`output/extracted_data.json`)
+## 1. Frame Sampling
+
+The video runs at 30 FPS, but processing every frame is unnecessary.
+
+Selected frames are processed at a configurable interval to reduce OCR computation.
+
+---
+
+## 2. Frame Classification
+
+The system filters out animation/non-scoreboard frames using:
+
+* HSV color profile
+* Edge density
+* Scoreboard grid structure
+
+Only likely scoreboard frames are passed to OCR.
+
+### Visual Evidence
+
+```text
+docs/screenshots/02_code_running.png
+```
+
+---
+
+## 3. Scoreboard Detection
+
+Since the provided scoreboard has a **fixed layout**, calibrated ROI coordinates are used.
+
+This avoids unnecessary object-detection models and provides fast, deterministic extraction.
+
+### Visual Evidence
+
+```text
+docs/screenshots/03_scoreboard_detection.png
+```
+
+```markdown
+![Scoreboard Detection](docs/screenshots/03_scoreboard_detection.png)
+```
+
+---
+
+## 4. Image Preprocessing
+
+The detected scoreboard is prepared for OCR using operations such as:
+
+```text
+Resize
+  ↓
+Grayscale
+  ↓
+Contrast Enhancement
+  ↓
+Thresholding
+  ↓
+OCR
+```
+
+---
+
+## 5. OCR
+
+EasyOCR detects text along with bounding boxes and confidence scores.
+
+Instead of running OCR separately on every cell, the scoreboard region is processed and detected text is mapped to the corresponding grid cell.
+
+```text
+OCR Detection
+     ↓
+Bounding Box
+     ↓
+Centroid (cx, cy)
+     ↓
+Row + Column
+     ↓
+Scoreboard Cell
+```
+
+### Visual Evidence
+
+```text
+docs/screenshots/04_ocr_output.png
+```
+
+```markdown
+![OCR Output](docs/screenshots/04_ocr_output.png)
+```
+
+---
+
+## 6. OCR Cleaning & Validation
+
+Common OCR errors are corrected contextually:
+
+```text
+O → 0
+I/l → 1
+S → 5
+Z → 2
+— → -
+```
+
+Extracted scores are also checked against bowling rules.
+
+Examples:
+
+```text
+0 ≤ score ≤ 300
+```
+
+and cumulative scores should not decrease between frames.
+
+---
+
+## 7. Temporal State Tracking
+
+The same scoreboard state can appear across multiple frames.
+
+The system compares the current state with the previous valid state and records only meaningful changes.
+
+```text
+Same State
+    ↓
+Ignore Duplicate
+
+Changed State
+    ↓
+Save New State
+```
+
+---
+
+# 📤 Output
+
+The system generates:
+
+```text
+output/
+│
+├── extracted_data.json
+├── extracted_data.csv
+├── annotated_video.mp4
+└── frames/
+```
+
+### JSON
+
+Stores hierarchical scoreboard information:
+
 ```json
 {
-  "source_video": "input/bowling_scoreboard.mp4",
-  "total_states_extracted": 12,
-  "scoreboard_states": [
+  "timestamp": 0.0,
+  "frame_number": 0,
+  "lane": "6",
+  "group_name": "TARUN",
+  "players": [
     {
-      "timestamp": 0.0,
-      "frame_number": 0,
-      "lane": "6",
-      "group_name": "TARUN",
-      "players": [
-        {
-          "initial": "J",
-          "frames": [
-            {"marks": "X", "score": "15"},
-            {"marks": "5-", "score": "20"},
-            {"marks": "-7", "score": "27"},
-            {"marks": "4-", "score": "31"},
-            {"marks": "", "score": ""}
-          ],
-          "total": "31"
-        }
-      ]
+      "initial": "J",
+      "total": "31"
     }
   ]
 }
 ```
 
-### CSV Output (`output/extracted_data.csv`)
-Columns: `timestamp`, `frame_number`, `lane`, `group_name`, `player_initial`, `F1_marks`, `F1_score`, ..., `F10_marks`, `F10_score`, `total_score`.
+### CSV
+
+Contains tabular information such as:
+
+```text
+timestamp
+frame_number
+lane
+group_name
+player_initial
+F1_marks
+F1_score
+...
+F10_marks
+F10_score
+total_score
+```
 
 ---
 
-## 10. Technical Interview Preparation (FOG Technologies)
+# 🎥 Annotated Video
 
-### Q1: Why OpenCV instead of a deep learning framework for detection?
-**Answer:** The scoreboard video is a direct screen capture from an automated Brunswick system where the scoreboard occupies fixed regions of the frame. Training an object detection model (such as YOLO or Faster R-CNN) requires thousands of labeled images, consumes high GPU resources, and introduces non-deterministic bounding box jitter. A calibrated ROI model using OpenCV is $O(1)$, 100% deterministic, and executes in milliseconds without requiring GPU training.
+The final video visually demonstrates:
 
-### Q2: How did you classify non-scoreboard frames (animations, pin diagrams)?
-**Answer:** The system uses a multi-feature heuristic classifier in `frame_classifier.py`:
-1. **Color Profile**: Scoreboards are dominated by blue gradients (HSV $H \in [95, 135]$), whereas strike animations contain large red/yellow components ($H < 10$ or $H > 170$).
-2. **Edge Density**: Canny edge detection verifies the presence of horizontal and vertical grid dividers.
-3. **Morphological Grid Verification**: Horizontal line kernels detect the continuous row lines of the scoring table.
+* Scoreboard ROI
+* Grid boundaries
+* OCR bounding boxes
+* Detected text
+* OCR confidence
+* Extracted scoreboard information
 
-### Q3: Why single-pass spatial OCR instead of cropping individual cells?
-**Answer:** A standard bowling scoreboard has 4 players $\times$ 11 columns $\times$ 2 sub-rows = 88 individual cells. Running OCR 88 times per frame on CPU took ~60 seconds per frame. In single-pass spatial OCR, the entire table is processed in one call (~0.8s), and each detected text box is assigned to its grid cell by checking the spatial centroid $(c_x, c_y)$ against pre-computed column and row boundaries.
+### Demo Video
 
-### Q4: How do you handle OCR misclassifications and noise?
-**Answer:**
-1. **Character Whitelists**: Score cells are constrained to digits `0-9`, marks are constrained to `0-9, X, /, -`, and initials are constrained to `A-Z`.
-2. **Domain Substitution Tables**: Mapping common visual OCR confusions (e.g. `O` $\rightarrow$ `0`, `l/I` $\rightarrow$ `1`, `S` $\rightarrow$ `5`, `Z` $\rightarrow$ `2`, `\u2014` $\rightarrow$ `-`).
-3. **Domain Validation Rules**: Bowling rules enforce non-decreasing cumulative scores ($\text{score}_{f+1} \ge \text{score}_f$) and maximum scores $\le 300$.
+**Add your demo video link here:**
 
-### Q5: How would you make this system production-ready for real-time cameras?
-**Answer:**
-1. **Perspective Transformation**: Use `cv2.findHomography` and `cv2.warpPerspective` with 4 detected corner markers to rectify angled camera shots.
-2. **Kalman Filtering / Temporal Smoothing**: Track score transitions and filter out momentary OCR flickers.
-3. **Async Pipeline**: Decouple frame decoding (I/O) from OCR inference using worker queues (`asyncio` / multiprocessing).
+```text
+[Demo Video](YOUR_GOOGLE_DRIVE_OR_YOUTUBE_LINK)
+```
+
+### Recommended Demo Flow
+
+```text
+Input Video
+    ↓
+Run Project
+    ↓
+Scoreboard Detection
+    ↓
+OCR Extraction
+    ↓
+Final JSON / CSV
+    ↓
+Annotated Video
+```
 
 ---
 
-## 11. Known Limitations & Future Improvements
+# 📸 Documentation Evidence
 
-- **Angled / Handheld Cameras**: Current ROI coordinates assume fixed screen aspect ratio. For moving cameras, automatic corner detection via ArUco markers or quad contour detection would be added.
-- **Stylized Bowling Fonts**: Certain 3D beveled fonts (like split-pin indicators) can benefit from a fine-tuned CRNN recognition head.
+The assessment requires screenshots showing the working solution.
+
+| Screenshot                    | What it should show         |
+| ----------------------------- | --------------------------- |
+| `01_input_frame.png`          | Original scoreboard frame   |
+| `02_code_running.png`         | Project running in terminal |
+| `03_scoreboard_detection.png` | ROI + grid detection        |
+| `04_ocr_output.png`           | OCR boxes + detected text   |
+| `05_final_output.png`         | JSON/CSV final result       |
+
+These screenshots can be included in the assessment PDF.
+
+---
+
+# ❓ Key Technical Decisions
+
+### Why OpenCV instead of YOLO?
+
+The scoreboard has a fixed and predictable layout. A calibrated ROI approach is therefore faster and simpler than training a general-purpose object detector.
+
+If the camera position becomes variable, automatic detection or a deep-learning detector can be introduced.
+
+### Why OCR only selected frames?
+
+OCR is computationally expensive. Frame sampling and classification reduce unnecessary OCR calls.
+
+### Why spatial OCR?
+
+Processing the complete scoreboard once and mapping OCR bounding boxes to cells avoids running OCR independently on every cell.
+
+---
+
+# ⚠️ Limitations
+
+The current implementation assumes:
+
+* Fixed/known scoreboard layout
+* Reasonably clear video
+* Limited perspective distortion
+* Consistent scoreboard design
+
+Moving cameras and highly angled views would require automatic perspective correction.
+
+---
+
+# 🚀 Future Improvements
+
+* Automatic scoreboard detection
+* Perspective correction using homography
+* Temporal/Kalman filtering
+* Adaptive frame sampling
+* Real-time camera support
+* Improved OCR model for stylized fonts
+* Automatic support for multiple scoreboard layouts
+
+---
+
+# 📦 Deliverables
+
+This project provides all three required assessment deliverables:
+
+### 1. GitHub Repository
+
+Contains complete source code and documentation.
+
+### 2. Demo Video
+
+Shows:
+
+```text
+Input → Code → Detection → OCR → Final Output
+```
+
+### 3. Documentation PDF
+
+Contains screenshots of:
+
+```text
+Input
+Code Execution
+Scoreboard Detection
+OCR
+Final Output
+```
+
+---
+
+# 👩‍💻 Candidate
+
+**Khushi Pal**
+
+**Role:** Computer Vision Engineer
+
+**Assessment:** Round 1 – FOG Technologies
+
+---
+
+## ⭐ Summary
+
+The system converts bowling scoreboard video into structured data using:
+
+**OpenCV + OCR + Spatial Mapping + Domain Validation + Temporal Tracking**
+
+The approach is lightweight, explainable, and designed specifically for the fixed-layout scoreboard provided in the assessment.
